@@ -9,69 +9,67 @@
     <title>Password Generator</title>
 </head>
 <body>
-    <div class="container border">
-        <div class="container d-flex justify-content-center">
-            <h1>Password Generator</h1>
-        </div>
-        <div class="container">
-            <form>
-                <div class="row">
-                    <div class="col-4 d-flex justify-content-center border">
-                        <div class="container">
-                            <div class="form-check-inline form-check">
-                                <label for="pwLength" class="col-8 col-form-label"> Password Length:</label>
-                                <input type="pwLength" class="form-control col-3" id="pwLength" placeholder="e.g. 10">
-                            </div>
+    <nav class="navbar navbar-light bg-primary">
+            <a class="navbar-brand" >Password Generator</a>
+    </nav>
+    <div class="container bg-light" style="background-color: #e3f2fd;">
+        <div class="row">
+            <div class="col-6 d-flex justify-content-center">
+                <div class="container">
+                    <div class="row d-flex justify-content-center">
+                        <h4>Character Choices</h4>
+                    </div>
+                    <div class="row d-flex justify-content-around">
+                        <div class="form-check-inline form-check">
+                            <input type="checkbox" class="form-check-input" id="specialChar" >
+                            <label class="form-check-label" for="specialChar">Special</label>
+                        </div>
+                        <div class="form-check-inline form-check">
+                            <input type="checkbox" class="form-check-input" id="numericChar">
+                            <label class="form-check-label" for="numericChar">Numeric</label>
                         </div>
                     </div>
-                    <div class="col-8 ">
-                        <div class="row">
-                            <div class="container d-flex justify-content-around">
-                                <h3>Character Choices</h3>
-                            </div>
+                    <div class="row d-flex justify-content-around">
+                        <div class="form-check-inline form-check">
+                            <input type="checkbox" class="form-check-input" id="upperCaseChar">
+                            <label class="form-check-label" for="upperCaseChar">Upper Case</label>
                         </div>
-                        <div class="row">
-                            <div class="container d-flex justify-content-around">
-                                <div class="form-check-inline form-check">
-                                    <input type="checkbox" class="form-check-input" id="specialChar" >
-                                    <label class="form-check-label" for="specialChar">Special</label>
-                                </div>
-                                <div class="form-check-inline form-check">
-                                    <input type="checkbox" class="form-check-input" id="numericChar">
-                                    <label class="form-check-label" for="numericChar">Numeric</label>
-                                </div>
-                                <div class="form-check-inline form-check">
-                                    <input type="checkbox" class="form-check-input" id="upperCaseChar">
-                                    <label class="form-check-label" for="upperCaseChar">Upper Case</label>
-                                </div>
-                                <div class="form-check-inline form-check">
-                                    <input type="checkbox" class="form-check-input" id="lowerCaseChar">
-                                    <label class="form-check-label" for="lowerCaseChar">Lower Case</label>
-                                </div>
-                            </div>
+                        <div class="form-check-inline form-check">
+                            <input type="checkbox" class="form-check-input" id="lowerCaseChar">
+                            <label class="form-check-label" for="lowerCaseChar">Lower Case</label>
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
-        <div class="container d-flex justify-content-center">
-            <div class="d-flex justify-content-center">
-                <input class="form-control col-12" type="text" id="outputBox" readonly>
-                <button type="button" class="btn btn-light">Copy</button>  
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6 d-flex justify-content-center">
-                <button type="button" class="btn btn-primary" onclick="generatePassword()">Generate</button>     
             </div>
             <div class="col-6 d-flex justify-content-center">
-                <button type="button" class="btn btn-primary">Reset</button>     
+                <div class="container">
+                    <div class="form-group d-flex justify-content-center">
+                        <textarea class="form-control" type="text" id="outputBox" rows="5"readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">  
+            <div class="col-6 d-flex justify-content-center">  
+                <div class="container d-flex justify-content-center">
+                    <div class="form-group">
+                        <label for="pwLength">Password Length</label>
+                        <input type="passwordlength" class="form-control" id="pwLength" aria-describedby="emailHelp" placeholder="8-128 characters">
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 d-flex justify-content-around">
+                <div class="container d-flex justify-content-around ">
+                    <button type="button" class="btn btn-primary" onclick="generatePassword()">Generate</button>   
+                </div>  
+                <div class="container d-flex justify-content-around">
+                    <button type="button" class="btn btn-secondary">Copy</button>     
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        
 
         var password
         var pwlenght;
@@ -86,12 +84,8 @@
         var specialCharArray= "!#$%&()*+-.,:;<=>?@[^_`{|}~"
         var pwArray
         var minOneBoxChecked
-        var passwordLengthProvided
-        // missing quotation mark, closing square bracket and backslash
-        // if (document.getElementById("lowercasecheckbox").click) {
-        //     pwarray = pwarray.concat(lowercasearray)
-        // }
-        // Generator
+        var passwordLengthAcceptable
+
 
         // Function to add character arrays if box is checked
         function addCharacterTypes(box, array){
@@ -108,10 +102,22 @@
                     minOneBoxChecked = true
                 }
             }
-            // Check to ensure length is provided by user
-            if(document.getElementById("pwLength").value !== "") {passwordLengthProvided = true}
-            
-            if (minOneBoxChecked == true && passwordLengthProvided == true){
+            // Check to ensure length is between 8 and 128 characters
+            if(document.getElementById("pwLength").value < 8) {
+                passwordLengthAcceptable = false
+                passwordStatus = "Password length must be at least 8 characters"    
+            }
+            else{
+                if(document.getElementById("pwLength").value > 128) {
+                    passwordLengthAcceptable = false
+                    passwordStatus = "Password length must be less than 128 characters" 
+                }
+                else{
+                    passwordLengthAcceptable = true
+                }
+            }
+            // If both pass, the password will be generated
+            if (minOneBoxChecked == true && passwordLengthAcceptable == true){
 
                 pwlength = document.getElementById("pwLength").value
                 password = ""
@@ -123,24 +129,25 @@
                 addCharacterTypes("upperCaseChar", upperCaseArray)
                 addCharacterTypes("lowerCaseChar", lowerCaseArray)
 
+                // Populate password variable
                 for (var i=0; i <= pwlength; i++){
                     password = password.concat(pwArray[Math.floor(Math.random()*pwArray.length)])
                 }
+
                 // Print generated password in box
                 document.getElementById("outputBox").value = password
             }
             else{
+                //If either character boxes are unticked or password length is outside the required range, error msg will be displayed
                 if(minOneBoxChecked == false){
                     alert("Please select at least one Character Choice")
                 }
                 else{
-                    alert("Please provide Password Length")
+                    alert(passwordStatus)
                 }
                 
             }
         }
-
-
    </script>
 </body>
 </html>
